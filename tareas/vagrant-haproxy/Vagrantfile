@@ -1,0 +1,24 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/xenial64"
+  config.vm.provider :virtualbox do |vb|
+    vb.customize [ 'modifyvm', :id, '--memory', '512']
+  end
+  config.vm.define "web-01" do |web|
+    web.vm.synced_folder "www_1", "/var/www/html"
+    web.vm.network "private_network", ip: "192.168.205.16"
+    web.vm.provision "shell", path: "scripts/install-apache.sh"
+  end
+  config.vm.define "web-02" do |web|
+    web.vm.synced_folder "www_2", "/var/www/html"
+    web.vm.network "private_network", ip: "192.168.205.17"
+    web.vm.provision "shell", path: "scripts/install-apache.sh"
+  end
+  config.vm.define "haproxy" do |hap|
+    hap.vm.synced_folder "hap_cfg", "/tmp/haproxy"
+    hap.vm.network "private_network", ip: "192.168.205.15"
+    hap.vm.provision "shell", path: "scripts/install-haproxy.sh"
+  end
+end

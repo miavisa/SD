@@ -1,0 +1,4 @@
+*.log
+.Vagrantfile.swp
+.vagrant/
+.install-haproxy.sh.swp
